@@ -1,73 +1,128 @@
 import React, {useState} from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolder,  } from '@fortawesome/free-solid-svg-icons'
-import './App.css'; 
-import Php from './icons/php-brands.svg';
-import htmlCanvas from 'html2canvas';
+import {Row, Col, Input, Menu, Dropdown, Button} from 'antd';
+import 'antd/dist/antd.css';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import FolderIcon from './icons/folder-solid.svg';
-import _ from 'lodash';
+import htmlCanvas from 'html2canvas';
+export default function App() {
+    const {TextArea} = Input
 
-function App() {
-  const [downloadUrl, setDownloadUrl] = useState('');
-  const [folders, setFolders] = useState([]);
-  // const folders = [
-    // {
-    //   name: 'First',
-    //   type: 'folder         '
-    // },
-    // {
-    //   name: 'Second',
-    //   type: 'folder'
-    // }
-  // ]
+    const defaultFieldWidth = "500px";
+    const defaultFieldHeight = "100px";
 
-  const stringToObject = (textInput ) => {
-    // console.log('this is the text Input ', textInput)
-    let inputString = JSON.parse(textInput);
-    console.log('the parsed value ', inputString);
-    
-    // let tempArray = []
-    // {_.mapKeys(inputString, (value, key) => {
-    //   console.log('showing the value ', value)
-    //   // setFolders([...folders, {key: value}]);
-    //   tempArray.push({key: value})
-    // } 
-    // )}
-    // setFolders(tempArray);
-    setFolders(inputString);
+    const [inputFormat, setInputFormat] = useState('JSON');
+    const [folders, setFolders] = useState([]);
 
-  }
+    const [downloadUrl, setDownloadUrl] = useState('');
 
- 
+    const [editorFormat, setEditorFormat] = useState('Sublime');
 
-  const handleClick = () => {
-    htmlCanvas(document.querySelector("#capture")).then(canvas => {
-      document.body.appendChild(canvas);
-      let canvasUrl = canvas.toDataURL('image/png');
+    const menu = (
+        <Menu 
+        // onClick={handleMenuClick}
+        >
+          <Menu.Item key="1" 
+        //   icon={<UserOutlined />}
+          >
+            1st menu item
+          </Menu.Item>
+          <Menu.Item key="2" >
+            2nd menu item
+          </Menu.Item>
+          <Menu.Item key="3" >
+            3rd menu item
+          </Menu.Item>
+        </Menu>
+      );
 
-      // let  downloadCanvas = canvasUrl.replace(/^data:image.png/, "data:application/octet-stream");
-      // setDownloadUrl(downloadCanvas);
-      setDownloadUrl(canvasUrl)
-    // document.querySelector('#downloadThis').attr("href", downloadCanvas);
+      const downloadOptions = (downUrl) => (
+        <Menu 
+        // onClick={handleMenuClick}
+        >
+          <Menu.Item key="1" 
+        //   icon={<UserOutlined />}
+          >
+            <a href={downUrl} id="downloadThis" download>Download PNG</a>
+          </Menu.Item>
+          
+        </Menu>
+      )
 
-	});
-
-  }
-  return (
-    <div className="App">
+      const stringToObject = (event ) => {
+        let textInput = event.target.value;
+        console.log(textInput);
+        let inputString = JSON.parse(textInput);
+        console.log('the parsed value ', inputString);
+        setFolders(inputString);
       
-      <div>
-        <textarea onChange={(e) => stringToObject(e.target.value)
-        }
-        style={{width: '300px', height: '300px'}}>
+      }
 
-        </textarea>
-      </div>
-      <div id="capture">
-      <h2>show this</h2>
-     {/* <FontAwesomeIcon icon={faFolder} /> */}
+      const prepareDownload = () => {
+        htmlCanvas(document.querySelector("#capture")).then(canvas => {
+     
+          let canvasUrl = canvas.toDataURL('image/png');
+          setDownloadUrl(canvasUrl);
+        });
+      }
+      
+    return (
+        <>
+        <h1>Folder 2 Pic</h1>
+        <Row gutter={24}>
+            <Col span={12}>
 
-     {folders.map(fold => {
+            <Row>
+            <Col span={24}>
+            <Dropdown.Button 
+            // onClick={handleButtonClick} 
+            trigger="click"
+            overlay={menu}>
+      {inputFormat}
+    </Dropdown.Button>
+   
+            </Col>
+                </Row>    
+
+                <TextArea allowClear
+                 onChange={stringToObject} 
+                style={{width: defaultFieldWidth, height: defaultFieldHeight}}>
+                    </TextArea>        
+            </Col>
+
+
+{/* THE RIGHT HAND SIDE */}
+
+            <Col span={12}>
+                <Row>
+                <Dropdown.Button 
+            // onClick={prepareDownload} 
+            trigger="click"
+            overlay={menu}>
+      {editorFormat}
+    </Dropdown.Button>
+
+    &nbsp; &nbsp; &nbsp;
+
+<Button>Tweet</Button>
+
+&nbsp; &nbsp; &nbsp;
+
+{/* <a href={downloadUrl} id="downloadThis" download>Download PNG</a> */}
+
+<Button 
+            onClick={prepareDownload} 
+            trigger="click"
+            >
+      Download
+    </Button>
+
+    <a href={downloadUrl} id="downloadThis" download>Download this</a>
+
+                </Row>
+                <Row>
+                <Col span={24} style={{backgroundColor: "#EDEDED"}}>
+                <div id="capture">
+                {folders.map(fold => {
        if(Array.isArray(fold.folder)){
          fold.folder.map()
          return (
@@ -81,32 +136,19 @@ function App() {
       }
        return (
         <>
-        <img src={FolderIcon} style={{width: '20px', height: '10px'}}/> {fold.file}
+        <img src={FolderIcon} style={{width: '20px', height: '10px'}}/> {fold.name}
         <br />
         
         </>
        )
      }
-       
-      
-      )}
-
-     {/* {_.mapKeys(folders, (value, key) => {
-       console.log('showing the value ', value)
-// (
-//   <>
-//  <img src={FolderIcon} style={{width: '20px', height: '10px'}}/> {value}
-//  </>
-// )
-     } 
-     )} */}
-     </div>
-
-     <button onClick={() => handleClick()}> Click this</button>
-
-     <a href={downloadUrl} id="downloadThis" download>Download this</a>
-    </div>
-  );
+           
+     )}
+                </div>
+                </Col>
+                </Row>
+            </Col>
+        </Row>
+        </>
+    )
 }
-
-export default App;
