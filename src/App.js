@@ -35,14 +35,14 @@ export default function App() {
         </Menu>
       );
 
-      const downloadOptions = (downUrl) => (
+      const downloadOptions = () => (
         <Menu 
         // onClick={handleMenuClick}
         >
           <Menu.Item key="1" 
         //   icon={<UserOutlined />}
           >
-            <a href={downUrl} id="downloadThis" download>Download PNG</a>
+            <a href={downloadUrl} id="downloadThis" download>Download PNG</a>
           </Menu.Item>
           
         </Menu>
@@ -62,14 +62,25 @@ export default function App() {
      
           let canvasUrl = canvas.toDataURL('image/png');
           setDownloadUrl(canvasUrl);
+
+          let a = document.getElementById('downloadThis');
+          a.click();
         });
       }
       
     return (
         <>
-        <h1>Folder 2 Pic</h1>
+        <Row gutter={24} justify="center" >
+          <Col style={{marginTop: '10%'}}>
+          <h1>Easily create and share images of your folder
+             structure using your favourite Editor them</h1>
+          </Col>
+       
+        </Row>
+        
         <Row gutter={24}>
-            <Col span={12}>
+          <Col xs={0} sm={0} md={4} lg={4}></Col>
+            <Col xs={24} sm={24} md={8} lg={8} style={{backgroundColor: '#DEDEDE', padding: '20px'}}>
 
             <Row>
             <Col span={24}>
@@ -85,14 +96,15 @@ export default function App() {
 
                 <TextArea allowClear
                  onChange={stringToObject} 
-                style={{width: defaultFieldWidth, height: defaultFieldHeight}}>
+                style={{width: "100", height: defaultFieldHeight}}>
                     </TextArea>        
             </Col>
 
 
 {/* THE RIGHT HAND SIDE */}
 
-            <Col span={12}>
+<Col xs={0} sm={0} md={1} lg={1}></Col>
+<Col xs={24} sm={24} md={8} lg={8} style={{backgroundColor: '#DEDEDE', padding: '20px'}}>
                 <Row>
                 <Dropdown.Button 
             // onClick={prepareDownload} 
@@ -107,8 +119,6 @@ export default function App() {
 
 &nbsp; &nbsp; &nbsp;
 
-{/* <a href={downloadUrl} id="downloadThis" download>Download PNG</a> */}
-
 <Button 
             onClick={prepareDownload} 
             trigger="click"
@@ -116,7 +126,7 @@ export default function App() {
       Download
     </Button>
 
-    <a href={downloadUrl} id="downloadThis" download>Download this</a>
+    <a href={downloadUrl} id="downloadThis" download hidden>Download this</a>
 
                 </Row>
                 <Row>
